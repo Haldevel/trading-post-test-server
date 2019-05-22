@@ -73,7 +73,7 @@ const personSchema = Schema({
     timestamps: true
 });
 
-//added on May 21
+//added on May 21 pre save hook
 personSchema.pre("save", async function (next) {
     try {
         if (!this.isModified("password")) {

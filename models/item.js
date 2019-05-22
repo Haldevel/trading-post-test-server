@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Person = require('./person');
 const Schema = mongoose.Schema;
 
 var itemSchema = Schema({
@@ -33,6 +34,22 @@ var itemSchema = Schema({
 }, { timestamps: true });
 
 itemSchema.index({title: 'text', category: 'text'});
+
+//hook before removing an item
+itemSchema.pre("remove", async function(next) {
+  try {
+    // find a user
+    let person = await Person.findById(this.person); //???
+    // remove the id of the message from their messages list using mongoose sync function
+    person.items.remove(this.id);
+    // save that user
+    await person.save();
+    // return next
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+});
 
 var Item = mongoose.model('Item', itemSchema);
 

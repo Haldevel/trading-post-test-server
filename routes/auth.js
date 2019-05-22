@@ -1,5 +1,22 @@
 const express = require("express");
 const router = express.Router();
+const { signup, signin} = require("../controllers/auth");
+
+router.post("/signup", signup);
+router.post("/signin", signin);
+
+module.exports = router;
+
+
+
+
+
+
+
+
+
+/* const express = require("express");
+const router = express.Router();
 const passport = require("passport");
 const db = require("../models");
 
@@ -118,4 +135,4 @@ router.get("/logout", function (req, res) {
 
  });
 
-module.exports = router;
+module.exports = router; */

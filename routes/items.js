@@ -3,8 +3,8 @@ const router = express.Router({ mergeParams: true });  //if we have multiple par
 
 const itemController = require("../controllers/itemsController");
 
-router.route("/:sortMethod")             //need to think how to update this route!
-    .get(itemController.getAllItems)
+/* router.route("/:sortMethod")             //need to think how to update this route!
+    .get(itemController.getAllItems) */
 
 //api/items/:userId/item/:itemId    
 router.route("/item/:itemId")

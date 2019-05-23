@@ -27,9 +27,9 @@ const wishlistRoutes = require("./routes/wishlist"); */
 app.use(bodyParser.json());
 
 app.use('/api/auth', authRoutes);
-
+//protect add route to add item with middleware
 app.use('/api/items/:userId', loginRequired, ensureCorrectUser, itemRoutes);
-//app.use('/api/items/:userId', loginRequired , ensureCorrectUser, itemRoutes);
+
 
 app.use(function (req, res, next) {
     let err = new Error("Not Found");

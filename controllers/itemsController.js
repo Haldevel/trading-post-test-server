@@ -22,19 +22,19 @@ module.exports = {
     },
     //ADDED ON 05/21
     addItem: async function (req, res, next) {
-        try {        
+        try {
             let item = await db.Item.create({
-                    //_owner: req.body._owner,
-                    _owner: req.params.userId,
-                    title: req.body.title,
-                    picture: req.body.picture,
-                    description: req.body.description,
-                    category: req.body.category,
-                    condition: req.body.condition
-                    //user: req.params.id
-                });
-                console.log("Inside  addItem " + req.params.userId + " " + req.params._id + " " + req.params.id);
-            
+                //_owner: req.body._owner,
+                _owner: req.params.userId,
+                title: req.body.title,
+                picture: req.body.picture,
+                description: req.body.description,
+                category: req.body.category,
+                condition: req.body.condition
+                //user: req.params.id
+            });
+            console.log("Inside  addItem " + req.params.userId + " " + req.params._id + " " + req.params.id);
+
             let foundPerson = await db.Person.findById(req.params.userId);
             foundPerson.items.push(item._id); //???
             await foundPerson.save();
@@ -48,6 +48,49 @@ module.exports = {
         }
     },
     //END ADDING ON 05/21
+
+    //added on 05/22
+    getSingleItem: async function (req, res, next) {
+        try {
+            let item = await db.Item.findById(req.params.itemId);
+            return res.status(200).json(item);
+        } catch (err) {
+            return next(err);
+        }
+    },
+    //the method to update an item based on its id
+    updateItem: async function (req, res, next) {
+        try {
+            console.log("itemId" + req.params.itemId);
+            let item = await db.Item.findOneAndUpdate({
+                _id: req.params.itemId
+            }, {
+                $set: {
+                    title: req.body.title,
+                    picture: req.body.picture,
+                    description: req.body.description,
+                    condition: req.body.condition
+                }
+            }, {
+                new: true
+            })
+            return res.status(200).json(item);
+        } catch (err) {
+            return next(err);
+        }
+    },
+    deleteItem: async function (req, res, next) {
+        try {
+            let foundItem = await db.Item.findById(req.params.itemId);
+            await foundItem.remove();
+            return res.status(200).json(foundItem);
+        } catch (err) {
+            return next(err);
+        }
+    }
+    //end added on 5/22
+
+
 
     //COMMENTED OUT ON 05/21
     /* //the method to add an item to the collection of items and add the corresponding item to the items of the specified user
@@ -88,7 +131,7 @@ module.exports = {
     }, */
     //END COMMENTING OUT ON 05/21
 
-    deleteItem: function (req, res) {
+    /* deleteItem: function (req, res) {
         db.Person
             .findOneAndUpdate({
                 _id: req.params.userId
@@ -110,8 +153,8 @@ module.exports = {
             });
 
 
-    },
-    //the method to update an item based on its id
+    }, */
+    /* //the method to update an item based on its id
     updateItem: function (req, res) {
         db.Item.findOneAndUpdate({
                 _id: req.params.itemId
@@ -126,10 +169,10 @@ module.exports = {
             .then(db => {
                 res.json(db);
             })
-    },
-    getSingleItem: function (req, res) {
+    }, */
+    /* getSingleItem: function (req, res) {
         db.Item.findById({
             _id: req.params.itemId
         }).then(dbModel => res.json(dbModel))
-    }
+    } */
 };

@@ -39,7 +39,7 @@ itemSchema.index({title: 'text', category: 'text'});
 itemSchema.pre("remove", async function(next) {
   try {
     // find a user
-    let person = await Person.findById(this.person); //???
+    let person = await Person.findById(this._owner); //???
     // remove the id of the message from their messages list using mongoose sync function
     person.items.remove(this.id);
     // save that user

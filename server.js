@@ -5,6 +5,11 @@ const mongoose = require("mongoose");
 const db = require("./models");
 const errorHandler = require("./controllers/error");
 const itemRoutes = require("./routes/items");
+const authRoutes = require("./routes/auth"); 
+const {
+    loginRequired,
+    ensureCorrectUser
+} = require("./middleware/auth");
 
 const bodyParser = require("body-parser");
 
@@ -17,12 +22,14 @@ app.use(cors());
 const categoriesRoutes = require("./routes/categories");
 const wishlistRoutes = require("./routes/wishlist"); */
 
-const authRoutes = require("./routes/auth"); 
+
 
 app.use(bodyParser.json());
 
 app.use('/api/auth', authRoutes);
-app.use('/api/items', itemRoutes);
+
+app.use('/api/items/:userId', loginRequired, ensureCorrectUser, itemRoutes);
+//app.use('/api/items/:userId', loginRequired , ensureCorrectUser, itemRoutes);
 
 app.use(function (req, res, next) {
     let err = new Error("Not Found");

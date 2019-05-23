@@ -8,21 +8,21 @@ exports.signin = async function (req, res, next) {
             email: req.body.email  //check if we should use id? 
         });
         let {
-            id,
+            _id,
             userName,
             profilePic
         } = person;
         let isMatch = await person.comparePassword(req.body.password);
         if (isMatch) {
             let token = jwt.sign({
-                    id,
+                    _id,
                     userName,
                     profilePic
                 },
                 process.env.SECRET_KEY
             );
             return res.status(200).json({
-                id,
+                _id,
                 userName,
                 profilePic,
                 token
@@ -33,7 +33,7 @@ exports.signin = async function (req, res, next) {
                 message: "Invalid Email/Password."
             });
         }
-    } catch (e) {
+    } catch (err) {
         return next({
             status: 400,
             message: "Invalid Email/Password."
@@ -47,20 +47,20 @@ exports.signup = async function (req, res, next) {
         //create a user in the db based on the req 
         let person = await db.Person.create(req.body);
         let {
-            id,
+            _id,
             userName,
             profilePic
         } = person; //get the needed data from the user by destruturing
         //create a token using a payload and a secret key
         let token = jwt.sign({
-                id,
+                _id,
                 userName,
                 profilePic
             },
             process.env.SECRET_KEY //we are using our env variable that lives in process.env
         );
         return res.status(200).json({ //on successfull signup we return status 200 in the response and all the data we need such as a new id and token too
-            id,
+            _id,
             userName,
             profilePic,
             token

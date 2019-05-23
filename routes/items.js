@@ -1,21 +1,23 @@
 const express = require("express");
-const router = express.Router();
-//const router = express.Router({ mergeParams: true });  //if we have multiple params
+//const router = express.Router();
+const router = express.Router({ mergeParams: true });  //if we have multiple params
 
 const itemController = require("../controllers/itemsController");
 
 router.route("/:sortMethod")
     .get(itemController.getAllItems)
 
-router.route("/:userId/:itemId")
+router.route("/:itemId")
     .delete(itemController.deleteItem)
-
-router.route("/:userId")   //    /api/items/:userid
-    .post(itemController.addItem)
-
-router.route("/single/:itemId")
     .get(itemController.getSingleItem)
     .put(itemController.updateItem)
+
+router.route("/")   //    /api/items/:userid
+    .post(itemController.addItem)
+
+/* router.route("/single/:itemId")
+    .get(itemController.getSingleItem)
+    .put(itemController.updateItem) */
 
 
 module.exports = router;

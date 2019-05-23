@@ -14,23 +14,27 @@ module.exports = {
         db.Item
             .find({})
             .limit(12)
-            .sort({ createdAt: sort })
+            .sort({
+                createdAt: sort
+            })
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err));
     },
     //ADDED ON 05/21
     addItem: async function (req, res, next) {
-        try {
+        try {        
             let item = await db.Item.create({
-                //_owner: req.body._owner,
-                _owner: req.params.userId,
-                title: req.body.title,
-                picture: req.body.picture,
-                description: req.body.description,
-                category: req.body.category,
-                condition: req.body.condition
-                //user: req.params.id
-            });
+                    //_owner: req.body._owner,
+                    _owner: req.params.userId,
+                    title: req.body.title,
+                    picture: req.body.picture,
+                    description: req.body.description,
+                    category: req.body.category,
+                    condition: req.body.condition
+                    //user: req.params.id
+                });
+                console.log("Inside  addItem " + req.params.userId + " " + req.params._id + " " + req.params.id);
+            
             let foundPerson = await db.Person.findById(req.params.userId);
             foundPerson.items.push(item._id); //???
             await foundPerson.save();
@@ -86,10 +90,18 @@ module.exports = {
 
     deleteItem: function (req, res) {
         db.Person
-            .findOneAndUpdate({ _id: req.params.userId }, { $pull: { items: req.params.itemId } })
+            .findOneAndUpdate({
+                _id: req.params.userId
+            }, {
+                $pull: {
+                    items: req.params.itemId
+                }
+            })
             .then(dbModel => {
                 console.log("The item was deleted from the items of " + dbModel.name);
-                db.Item.remove({ _id: req.params.itemId }).then(() => console.log("Item deleted"))
+                db.Item.remove({
+                    _id: req.params.itemId
+                }).then(() => console.log("Item deleted"))
                 res.json(dbModel)
             })
             .catch(err => {
@@ -101,8 +113,9 @@ module.exports = {
     },
     //the method to update an item based on its id
     updateItem: function (req, res) {
-        db.Item.findOneAndUpdate({ _id: req.params.itemId },
-            {
+        db.Item.findOneAndUpdate({
+                _id: req.params.itemId
+            }, {
                 $set: {
                     title: req.body.title,
                     picture: req.body.picture,
@@ -115,6 +128,8 @@ module.exports = {
             })
     },
     getSingleItem: function (req, res) {
-        db.Item.findById({ _id: req.params.itemId }).then(dbModel => res.json(dbModel))
+        db.Item.findById({
+            _id: req.params.itemId
+        }).then(dbModel => res.json(dbModel))
     }
 };

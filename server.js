@@ -35,7 +35,11 @@ app.get("/api/latest", async function(req, res, next) {
     try {
       let items = await db.Item.find()
         .limit(12)
-        .sort({ createdAt: "desc" });
+        .sort({ createdAt: "desc" })
+        .populate("_owner", {
+            userName: true,
+            profilePic: true
+          });
       return res.status(200).json(items);
     } catch (err) {
       return next(err);
